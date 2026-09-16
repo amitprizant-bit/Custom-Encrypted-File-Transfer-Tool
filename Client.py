@@ -1,3 +1,4 @@
+import json
 import os
 import queue
 import socket
@@ -92,6 +93,12 @@ class SecureChannel:
         data = self.aesgcm.decrypt(nonce, ciphertext, aad)
         self._seq_in += 1
         return data
+
+    def send_json(self, obj):
+        self.send_bytes(json.dumps(obj).encode("utf-8"))
+
+    def recv_json(self):
+        return json.loads(self.recv_bytes().decode("utf-8"))
 
     def close(self):
         try:
